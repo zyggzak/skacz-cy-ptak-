@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Skaczący Ptak</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#070d1c;color:white;font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+#app{max-width:760px;margin:auto;min-height:100vh}.screen{display:none;min-height:100vh;padding:24px}.active{display:flex}
+.menu,.panel,.death{align-items:center;justify-content:center;text-align:center}
+.menu{background:radial-gradient(circle at 50% 10%,#29447e,#111c3b 42%,#070d1c)}
+.box{width:min(480px,100%)}.brand{font-size:11px;letter-spacing:5px;color:#93a8d8;font-weight:900}
+.logo{width:92px;height:92px;margin:18px auto;border-radius:24px;background:linear-gradient(145deg,#ffe966,#ffbd19);border:4px solid #d79600;box-shadow:0 8px #9d6700;position:relative}
+.logo:before,.bird:before{content:"";position:absolute;right:-27px;top:27%;border-left:29px solid #ff8b24;border-top:11px solid transparent;border-bottom:11px solid transparent}
+.logo:after,.bird:after{content:"";position:absolute;right:12px;top:10px;width:12px;height:12px;border-radius:50%;background:#101522;border:3px solid white}
+h1{font-size:clamp(42px,10vw,62px);line-height:.9;margin:0;font-weight:1000;letter-spacing:-3px}.sub{color:#9eadd0;margin:15px 0 28px;font-weight:700}
+button{border:0;cursor:pointer;font:inherit;font-weight:900;border-radius:16px;padding:15px;width:100%;transition:.12s}button:active{transform:scale(.96);filter:brightness(1.2)}
+.buttons{display:grid;gap:11px}.start{background:linear-gradient(135deg,#ffb52b,#ff7a18);color:#fff}.shop{background:linear-gradient(135deg,#9d6cff,#6844df);color:#fff}.dark{background:#182541;color:#fff;border:1px solid #334568}.green{background:#102f38;color:#8ff3d0;border:1px solid #286775}
+.game{padding:0;flex-direction:column;background:#60d7ff}.hud{height:72px;flex:none;background:#101c38;border-bottom:2px solid #334568;display:flex;align-items:center;justify-content:space-between;padding:10px 14px;z-index:20}.score{background:#1d2c4d;border:1px solid #40567e;border-radius:13px;padding:8px 14px;font-weight:950;font-size:20px}.hud button{width:auto;padding:9px 11px;border-radius:11px;background:#eef4ff;color:#17233c;margin-left:5px;font-size:13px}.play{position:relative;flex:1;min-height:520px;overflow:hidden;background:linear-gradient(#58d5ff,#dffaff)}
+.sun{position:absolute;width:85px;height:85px;border-radius:50%;background:#ffe477;right:12%;top:8%;box-shadow:0 0 35px #ffe47799}.cloud{position:absolute;width:105px;height:28px;border-radius:30px;background:#fff;opacity:.8}.c1{left:7%;top:14%}.c2{right:18%;top:30%;transform:scale(.7)}
+.ground{position:absolute;bottom:0;height:18px;left:0;right:0;background:#53aa4c;border-top:4px solid #3e8138}.bird{position:absolute;width:42px;height:42px;border-radius:11px;background:linear-gradient(145deg,#ffe966,#ffc323);border:3px solid #d79600;box-shadow:0 5px #a96e00;z-index:12}.bird:before{right:-25px}.bird:after{right:5px;top:5px;width:11px;height:11px}
+.pipe{position:absolute;width:58px;background:linear-gradient(90deg,#4d5b68,#b9c3ca,#687684);border:3px solid #3c4957;z-index:8}.head{position:absolute;width:70px;height:25px;left:-9px;background:#87939d;border:3px solid #3c4957;border-radius:5px}.top{top:0}.top .head{bottom:-3px}.bottom{bottom:0}.bottom .head{top:-3px}
+.panel{flex-direction:column;background:radial-gradient(circle at 50% 0,#29356a,#11172d 55%,#080d19)}.panel h2{font-size:40px;margin:0 0 6px}.muted{color:#94a3c4;font-weight:700;margin-bottom:18px}.balance{background:#182541;border:1px solid #3a4e73;padding:10px 16px;border-radius:15px;font-weight:950;margin-bottom:15px}
+.tabs{display:flex;gap:7px;width:min(600px,100%);margin-bottom:12px}.tabs button{padding:11px 7px;background:#17233e;color:#9caacc;border:1px solid #304261}.tabs .sel{background:#7650e8;color:white;border-color:#9d82ff}.items{width:min(600px,100%);display:grid;gap:10px}.item{display:flex;align-items:center;gap:12px;padding:13px;border-radius:17px;background:#121d35;border:1px solid #2c3d60;text-align:left}.icon{font-size:32px;width:44px;text-align:center}.info{flex:1}.name{font-weight:950}.desc{font-size:12px;color:#91a0bf;margin-top:2px}.buy{width:auto;padding:9px 11px;background:#ffad20;color:#fff}.owned{background:#22c77a}.locked{background:#35445f;color:#91a0bf}.back{margin-top:16px;background:#253b64;color:#fff;width:min(600px,100%)}
+.death{background:radial-gradient(circle at 50% 15%,#3a286e,#111526 62%,#080b14)}.card{width:min(450px,100%);padding:30px 24px;border-radius:28px;background:#f7faff;color:#152039}.trophy{font-size:58px}.death h2{font-size:36px;margin:4px}.final{font-size:86px;color:#f39b12;font-weight:1000}.new{display:none;background:#fff1bd;color:#946100;padding:8px 14px;border-radius:20px;width:max-content;margin:7px auto;font-weight:900}.again{margin-top:16px;background:linear-gradient(135deg,#ffb52b,#ff7a18);color:#fff}.home{margin-top:9px;background:#17243b;color:#fff}
+.toast{position:fixed;top:82px;left:50%;transform:translate(-50%,-15px);opacity:0;background:#101a30ee;border:1px solid #536b96;padding:10px 15px;border-radius:13px;font-weight:900;z-index:99;transition:.2s}.toast.show{opacity:1;transform:translate(-50%,0)}
+</style>
+</head>
+<body><div id="app"><div id="toast" class="toast"></div>
+
+<section id="menu" class="screen active menu"><div class="box">
+<div class="brand">A NEW ARCADE EXPERIENCE</div><div class="logo"></div>
+<h1>SKACZĄCY<br>PTAK</h1><div class="sub">LEĆ. OMIJAJ. ZDOBYWAJ PUCHARY.</div>
+<div class="buttons"><button class="start" onclick="start()">▶ START</button><button class="shop" onclick="openShop()">✦ SKLEP</button><button class="dark" onclick="show('record')">🏆 REKORD PUCHARÓW</button><button class="green" onclick="show('how')">? JAK GRAĆ?</button></div>
+</div></section>
+
+<section id="game" class="screen game"><div class="hud"><div class="score">🏆 <span id="score">0</span></div><div><button onclick="openShop()">✦</button><button onclick="goMenu()">MENU</button></div></div><div id="play" class="play"><div class="sun"></div><div class="cloud c1"></div><div class="cloud c2"></div><div id="bird" class="bird"></div><div class="ground"></div></div></section>
+
+<section id="shopScreen" class="screen panel"><h2>SKLEP</h2><div class="muted">ULEPSZ SWÓJ LOT</div><div class="balance">🏆 <span id="wallet">0</span> PUCHARÓW</div>
+<div class="tabs"><button id="tabEffects" class="sel" onclick="shopTab('effects')">✨ EFEKTY</button><button id="tabChars" onclick="shopTab('chars')">🐦 POSTAĆ</button></div>
+<div id="effects" class="items"></div><div id="chars" class="items" style="display:none"></div><button class="back" onclick="show('menu')">← WRÓĆ</button></section>
+
+<section id="record" class="screen panel"><h2>REKORD PUCHARÓW</h2><div class="final" id="recordValue">0</div><div class="muted">TWÓJ NAJLEPSZY WYNIK</div><button class="back" onclick="show('menu')">← WRÓĆ</button></section>
+<section id="how" class="screen panel"><h2>JAK GRAĆ?</h2><div class="item" style="max-width:600px;line-height:1.6">🕹️ Dotknij ekranu albo naciśnij SPACJĘ / ↑, żeby skoczyć.<br><br>🏆 Omijaj przeszkody i zdobywaj puchary.<br><br>🛒 W sklepie kupuj efekty i nowe postacie.<br><br>🗿 Totem chroni przed pierwszym zderzeniem.</div><button class="back" onclick="show('menu')">← WRÓĆ</button></section>
+
+<section id="death" class="screen death"><div class="card"><div class="trophy">🏆</div><h2>KONIEC GRY</h2><div>ZDOBYTE PUCHARY</div><div class="final" id="final">0</div><div id="new" class="new">✦ NOWY REKORD!</div><div id="best">Najlepszy wynik: 0</div><button class="again" onclick="start()">↻ ZAGRAJ PONOWNIE</button><button class="home" onclick="goMenu()">⌂ MENU GŁÓWNE</button></div></section>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+let record=+localStorage.birdRecord||0,wallet=+localStorage.birdWallet||0;
+let owned=JSON.parse(localStorage.birdShop||'{}'),character=localStorage.birdCharacter||'yellow';
+let running=false,score=0,y=220,vy=0,px=70,last=0,spawn=.7,pipes=[],raf;
+const chars=[
+{id:'yellow',name:'Klasyczny',desc:'Klasyczny żółty ptak',price:0,icon:'🐦',color:'#ffd42a'},
+{id:'blue',name:'Niebieski',desc:'Chłodny niebieski kolor',price:15,icon:'🔵',color:'#4da6ff'},
+{id:'red',name:'Czerwony',desc:'Mocny czerwony styl',price:35,icon:'🔴',color:'#ff5757'},
+{id:'rainbow',name:'Tęczowy',desc:'Legendarny tęczowy ptak',price:120,icon:'🌈',color:'linear-gradient(135deg,#ff4d6d,#ffd93d,#4dff88,#5ba7ff)'},
+{id:'ball',name:'Ptak-piłka',desc:'Wygląda jak piłka',price:180,icon:'⚽',color:'#fff'},
+{id:'pigeon',name:'Gołąb',desc:'Specjalna postać',price:250,icon:'🕊️',color:'#b9c1cc'}];
+const effects=[
+{id:'e1',name:'Iskra',desc:'Delikatna smuga',price:10,icon:'✨'},
+{id:'e2',name:'Energia',desc:'Dłuższa i jaśniejsza',price:40,icon:'💫'},
+{id:'e3',name:'Gwiazda',desc:'Najbardziej efektowna',price:90,icon:'🌟'},
+{id:'totem',name:'Totem Ochrony',desc:'Pierwsze zderzenie nie kończy rundy',price:150,icon:'🗿'}];
+function save(){localStorage.birdRecord=record;localStorage.birdWallet=wallet;localStorage.birdShop=JSON.stringify(owned);localStorage.birdCharacter=character}
+function show(id){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));$(id).classList.add('active')}
+function toast(t){$('toast').textContent=t;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),1000)}
+function beep(freq=520){try{let a=new AudioContext(),o=a.createOscillator(),g=a.createGain();o.frequency.value=freq;o.connect(g);g.connect(a.destination);g.gain.value=.035;o.start();o.stop(a.currentTime+.1)}catch(e){}}
+function openShop(){beep();refresh();show('shopScreen')}
+function shopTab(t){beep();$('effects').style.display=t==='effects'?'grid':'none';$('chars').style.display=t==='chars'?'grid':'none';$('tabEffects').classList.toggle('sel',t==='effects');$('tabChars').classList.toggle('sel',t==='chars')}
+function refresh(){
+ $('wallet').textContent=wallet;$('recordValue').textContent=record;
+ $('effects').innerHTML=effects.map(x=>{let own=owned[x.id];return `<div class="item"><div class="icon">${x.icon}</div><div class="info"><div class="name">${x.name}</div><div class="desc">${x.desc}</div></div><button class="buy ${own?'owned':''}" onclick="buyEffect('${x.id}',${x.price})">${own?'✓ KUPIONE':x.price+' 🏆'}</button></div>`}).join('');
+ $('chars').innerHTML=chars.map(x=>{let own=x.price===0||owned['char_'+x.id];let sel=character===x.id;return `<div class="item"><div class="icon">${x.icon}</div><div class="info"><div class="name">${x.name}</div><div class="desc">${x.desc}</div></div><button class="buy ${sel?'owned':''}" onclick="buyChar('${x.id}',${x.price})">${sel?'✓ WYBRANY':own?'WYBIERZ':x.price+' 🏆'}</button></div>`}).join('');
+}
+function buyEffect(id,c){if(owned[id])return toast('Już posiadasz!');if(wallet<c)return toast('Za mało pucharów');wallet-=c;owned[id]=1;save();refresh();beep(700);toast('✓ Kupiono!')}
+function buyChar(id,c){if(character===id)return;if(!owned['char_'+id]&&c>0){if(wallet<c)return toast('Za mało pucharów');wallet-=c;owned['char_'+id]=1}character=id;save();refresh();beep(700);toast('✓ Postać wybrana!')}
+function applyChar(){let c=chars.find(x=>x.id===character)||chars[0];$('bird').style.background=c.color;if(character==='ball'){$('bird').style.borderRadius='50%';$('bird').style.border='3px solid #333'}else{$('bird').style.borderRadius='11px';$('bird').style.border='3px solid #d79600'}}
+function clearPipes(){pipes.forEach(p=>{p.a.remove();p.b.remove()});pipes=[]}
+function start(){beep();show('game');clearPipes();applyChar();score=0;$('score').textContent=0;px=Math.max(42,$('play').clientWidth*.15);y=$('play').clientHeight*.4;vy=-400;spawn=.7;running=true;last=performance.now();cancelAnimationFrame(raf);raf=requestAnimationFrame(loop)}
+function jump(){if(running){beep(390);vy=-400}}
+function addPipe(){let h=$('play').clientHeight,gap=155,min=65,max=Math.max(min+1,h-gap-120),top=min+Math.random()*(max-min),x=$('play').clientWidth+20,a=document.createElement('div'),b=document.createElement('div');a.className='pipe top';b.className='pipe bottom';a.style.height=top+'px';b.style.height=(h-top-gap)+'px';a.innerHTML='<div class="head"></div>';b.innerHTML='<div class="head"></div>';a.style.left=b.style.left=x+'px';$('play').append(a,b);pipes.push({a,b,x,passed:false})}
+function die(){running=false;cancelAnimationFrame(raf);beep(120);wallet+=score;let nr=score>record;if(nr)record=score;save();$('final').textContent=score;$('best').textContent='Najlepszy wynik: '+record;$('new').style.display=nr?'block':'none';refresh();show('death')}
+function loop(t){if(!running)return;let dt=Math.min(.032,(t-last)/1000||.016);last=t;let h=$('play').clientHeight;vy+=1050*dt;y+=vy*dt;spawn-=dt;if(spawn<=0){addPipe();spawn=1.65}
+for(const p of pipes){p.x-=225*dt;p.a.style.left=p.b.style.left=p.x+'px';if(!p.passed&&p.x+58<px){p.passed=true;score++;$('score').textContent=score}}
+pipes=pipes.filter(p=>{if(p.x<-90){p.a.remove();p.b.remove();return false}return true});
+$('bird').style.left=px+'px';$('bird').style.top=y+'px';
+let hit=y<0||y+42>h-18;for(const p of pipes)if(px+42>p.x&&px<p.x+58){let top=p.a.offsetHeight,bottom=h-p.b.offsetHeight;if(y<top||y+42>bottom)hit=true}
+if(hit){if(owned.totem&&!window.usedTotem){window.usedTotem=true;toast('🗿 TOTEM OCHRONIŁ CIĘ!');y=Math.max(100,y);vy=-300}else{window.usedTotem=false;die();return}}raf=requestAnimationFrame(loop)}
+$('play').addEventListener('pointerdown',e=>{e.preventDefault();jump()});document.addEventListener('keydown',e=>{if((e.code==='Space'||e.code==='ArrowUp')&&running){e.preventDefault();jump()}});
+function goMenu(){running=false;cancelAnimationFrame(raf);show('menu')}
+refresh();
+</script></body></html>
